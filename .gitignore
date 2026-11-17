@@ -1,0 +1,37 @@
+
+# Entornos virtuales de Python
+.venv/
+venv/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Configuraciones privadas
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Base de datos y datos privados
+data/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Archivos temporales y registros
+*.log
+*.bak
+*.tmp
+
+# Configuracion local de VS Code
+.vscode/
+
+# Evidencias y capturas privadas
+docs/
+
+# Instalador temporal de correcciones
+corregir_codigos_real_math_ar.py

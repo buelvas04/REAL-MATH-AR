@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REAL-MATH AR | Cámara del portátil</title>
+  <meta name="theme-color" content="#10192f">
+  <style>
+    * {box-sizing:border-box} body{margin:0;background:#10192f;color:#fff;font-family:system-ui,Segoe UI,Arial,sans-serif;overflow:hidden}
+    #sceneWrap {position:fixed;inset:0;background:#10192f}
+    a-scene {width:100%!important;height:100%!important}
+    .hud {position:fixed;z-index:30;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;pointer-events:none}
+    .card {background:#111d3be9;border:1px solid #ffffff45;box-shadow:0 12px 40px #0006;border-radius:16px;padding:14px 17px;max-width:480px;pointer-events:auto}
+    h1{font-size:1.12rem;margin:0 0 5px} p{font-size:.86rem;line-height:1.5;margin:6px 0} .status{font-weight:750;color:#b8f9e0}
+    .controls{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px} a,button,select {font:inherit;border-radius:8px;padding:9px 11px;border:1px solid #a79bff;background:#4e3eb7;color:#fff;text-decoration:none;cursor:pointer}
+    a.secondary {background:transparent} select {background:#fff;color:#25304d;font-size:.86rem;width:100%;max-width:290px}
+    .footer {position:fixed;z-index:30;left:14px;bottom:14px;right:14px;display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;pointer-events:none}
+    .footer .card {max-width:460px} .small{font-size:.78rem;color:#e0e6f5}
+    #help {display:none} #help.show {display:block}
+    @media(max-width:650px) {.hud{flex-direction:column}.card{padding:11px;max-width:100%}.footer{bottom:10px}.footer .card{max-width:100%}}
+  </style>
+  <!-- Versión fijada para evitar cambios inesperados en estas bibliotecas externas. -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/3.4.8/aframe/build/aframe-ar.js"></script>
+</head>
+<body>
+  <div id="sceneWrap">
+    <a-scene embedded vr-mode-ui="enabled: false" arjs="sourceType: webcam; debugUIEnabled: false; trackingMethod: best;" renderer="antialias: true; colorManagement: true;">
+      <a-marker id="hiroMarker" preset="hiro" emitevents="true" smooth="true" smooth-count="5" smooth-tolerance="0.01" smooth-threshold="2">
+        <!-- Los GLB usan un plano XY y altura Z: -90º X los alinea con el marcador horizontal XZ. -->
+        <a-entity id="arMathematicalModel" position="0 0.025 0" rotation="-90 0 0" scale="0.65 0.65 0.65"></a-entity>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  </div>
+  <div class="hud">
+    <section class="card" aria-live="polite">
+      <h1>◈ REAL-MATH AR · Cámara web</h1>
+      <p id="resourceTitle">Recurso matemático con marcador Hiro</p>
+      <p id="status" class="status">Solicitando cámara y buscando marcador…</p>
+      <div class="controls">
+        <a href="/marcador" target="_blank" rel="noopener noreferrer">▣ Imprimir marcador</a>
+        <a href="/" id="backToLesson" class="secondary">
+    ↩ Volver a mi lección
+</a>
+      </div>
+    </section>
+    <section class="card"><label for="modelChoice" class="small">Elegir modelo matemático</label><div><select id="modelChoice" aria-label="Modelo 3D">
+      <option value="pitagoras">Geometría — Teorema de Pitágoras</option>
+      <option value="identidad_algebraica">Álgebra — (a+b)²</option>
+      <option value="calculo_-2">Cálculo — Superficie a = -2</option>
+      <option value="calculo_-1">Cálculo — Superficie a = -1</option>
+      <option value="calculo_0">Cálculo — Superficie a = 0</option>
+      <option value="calculo_1">Cálculo — Superficie a = 1</option>
+      <option value="calculo_2">Cálculo — Superficie a = 2</option>
+    </select></div></section>
+  </div>
+  <div class="footer">
+    <section class="card"><p>1. Permite usar la <b>cámara</b>. 2. Imprime el marcador Hiro en otra pestaña. 3. Acerca el papel a la cámara hasta ver el objeto encima del marcador.</p><p class="small">La cámara requiere Chrome actualizado y una conexión local segura (127.0.0.1) o HTTPS. No grabamos ni enviamos imágenes a nuestro servidor.</p></section>
+    <section class="card"><button type="button" id="helpButton">¿No aparece el modelo?</button><p id="help">Revisa el permiso de cámara en la barra de direcciones. Usa buena iluminación, imprime el marcador completo y evita reflejos. Si la cámara no funciona, cierra Zoom u otras aplicaciones que la estén usando y recarga la página (Ctrl+R). El acceso a las bibliotecas necesita Internet.</p></section>
+  </div>
+  <script>
+    'use strict';
+    
+const parametros = new URLSearchParams(window.location.search);
+
+const cursoAnterior = parametros.get('course');
+const leccionAnterior = parametros.get('lesson');
+
+const botonRegresar = document.getElementById('backToLesson');
+
+if (
+    /^[1-9]\d*$/.test(cursoAnterior || '') &&
+    /^[1-9]\d*$/.test(leccionAnterior || '')
+) {
+    botonRegresar.href =
+        '/?course=' + encodeURIComponent(cursoAnterior) +
+        '&lesson=' + encodeURIComponent(leccionAnterior);
+} else {
+    botonRegresar.href = '/';
+    botonRegresar.textContent = '↩ Volver al inicio';
+}
+
+    const descriptions=Object.freeze({
+      pitagoras:'Geometría — Teorema de Pitágoras',
+      identidad_algebraica:'Álgebra — demostración de (a+b)²',
+      'calculo_-2':'Cálculo — z = -2(x²+y²)',
+      'calculo_-1':'Cálculo — z = -(x²+y²)',
+      'calculo_0':'Cálculo — z = 0',
+      'calculo_1':'Cálculo — z = x²+y²',
+      'calculo_2':'Cálculo — z = 2(x²+y²)'
+    });
+    const keys=Object.keys(descriptions);
+    const select=document.getElementById('modelChoice');
+    const modelEntity=document.getElementById('arMathematicalModel');
+    const title=document.getElementById('resourceTitle');
+    const status=document.getElementById('status');
+    const marker=document.getElementById('hiroMarker');
+    const wanted=new URLSearchParams(location.search).get('model');
+    select.value=Object.hasOwn(descriptions,wanted)?wanted:'pitagoras';
+    let modelReady=false,markerVisible=false;
+    function showStatus(){
+      status.textContent=markerVisible?(modelReady?'✓ Marcador reconocido: modelo matemático visible':'✓ Marcador reconocido. Cargando modelo 3D…'):'Busca el símbolo Hiro con la cámara para mostrar el modelo.';
+    }
+    function loadModel(){
+      // Solo se permiten siete nombres locales predefinidos: nunca cargar una URL del visitante.
+      const key=select.value;
+      if(!keys.includes(key))return;
+      modelReady=false; title.textContent=descriptions[key];
+      modelEntity.removeAttribute('gltf-model');
+      modelEntity.setAttribute('gltf-model','url(/assets/'+key+'.glb)');
+      showStatus();
+    }
+    select.addEventListener('change',loadModel);
+    modelEntity.addEventListener('model-loaded',()=>{modelReady=true;showStatus();});
+    modelEntity.addEventListener('model-error',()=>{status.textContent='No se pudo cargar el archivo 3D. Revisa la conexión y recarga la página.';});
+    marker.addEventListener('markerFound',()=>{markerVisible=true;showStatus();});
+    marker.addEventListener('markerLost',()=>{markerVisible=false;showStatus();});
+    document.getElementById('helpButton').addEventListener('click',()=>document.getElementById('help').classList.toggle('show'));
+    if(!window.isSecureContext || !navigator.mediaDevices?.getUserMedia){status.textContent='Chrome no puede acceder a la cámara en este origen. Usa http://127.0.0.1:8000 o HTTPS.';}
+    else if(!window.AFRAME){status.textContent='No se cargó A-Frame. Comprueba la conexión a Internet.';}
+    else loadModel();
+  </script>
+</body>
+</html>

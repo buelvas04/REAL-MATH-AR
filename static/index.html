@@ -1,0 +1,225 @@
+
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#10192f" />
+  <meta
+    name="description"
+    content="REAL-MATH AR: plataforma de matemáticas con Realidad Aumentada para estudiantes y profesores"
+  />
+  <title>REAL-MATH AR | Plataforma educativa</title>
+
+  <link rel="stylesheet" href="/assets/site.css" />
+
+  <script
+    type="module"
+    src="https://unpkg.com/@google/model-viewer@4.4.0/dist/model-viewer.min.js">
+  </script>
+
+  <!-- Evita cargar una versión anterior de app.js -->
+  <script
+    src="/assets/app.js?v=20261116-codigos-docentes"
+    defer>
+  </script>
+</head>
+
+<body>
+
+  <!-- ACCESO Y REGISTRO DE USUARIOS -->
+  <section id="authView" class="auth-shell">
+
+    <div class="auth-promo">
+
+      <div class="logo logo-light">
+        <span class="logo-symbol">◈</span>
+        <span>REAL-MATH <b>AR</b></span>
+      </div>
+
+      <div class="auth-copy">
+
+        <span class="overline">
+          APRENDIZAJE UNIVERSITARIO EN 3D
+        </span>
+
+        <h1>
+          Descubre las matemáticas desde
+          <em>otra dimensión.</em>
+        </h1>
+
+        <p>
+          Teoremas, demostraciones y conceptos abstractos
+          que cobran vida con modelos tridimensionales
+          y Realidad Aumentada.
+        </p>
+
+        <div class="promo-points">
+          <span>✦ Recursos interactivos</span>
+          <span>✦ Docentes y estudiantes</span>
+          <span>✦ Evaluaciones y progreso</span>
+        </div>
+
+      </div>
+
+      <div class="math-art" aria-hidden="true">
+        <div class="art-orbit"></div>
+        <div class="art-orbit b"></div>
+        <div class="art-orbit c"></div>
+        <div class="art-cube">∑</div>
+        <div class="math-eq one">a²+b²=c²</div>
+        <div class="math-eq two">∇f(x,y)</div>
+      </div>
+
+      <small class="auth-credit">
+        Proyecto académico · Universidad de Córdoba
+      </small>
+
+    </div>
+
+    <div class="auth-pane">
+
+      <div class="auth-card">
+
+        <div class="auth-header">
+          <span class="overline">Bienvenido/a</span>
+          <h2 id="authTitle">Accede a tu cuenta</h2>
+          <p id="authSubtitle">
+            Tus avances estarán disponibles
+            cada vez que inicies sesión.
+          </p>
+        </div>
+
+        <div class="auth-tabs">
+
+          <button
+            type="button"
+            data-auth="login"
+            class="active">
+            Ingresar
+          </button>
+
+          <button type="button" data-auth="student">
+            Registrarme
+          </button>
+
+          <button type="button" data-auth="teacher">
+            Soy profesor
+          </button>
+
+        </div>
+
+        <div id="authFormArea"></div>
+
+        <div class="auth-footer">
+
+          <button
+            type="button"
+            class="link-btn"
+            data-auth="forgot">
+            ¿Olvidaste tu contraseña?
+          </button>
+
+          <p class="small muted">
+            Selecciona el tipo de cuenta que deseas crear.
+            Puedes registrarte como estudiante o profesor
+            utilizando tu nombre, correo electrónico
+            y contraseña.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- PLATAFORMA PRINCIPAL -->
+  <div id="platform" class="platform hidden">
+
+    <aside class="sidebar">
+
+      <div class="logo">
+        <span class="logo-symbol">◈</span>
+        <span>REAL-MATH <b>AR</b></span>
+      </div>
+
+      <div class="role-pill" id="rolePill"></div>
+
+      <nav
+        id="navigation"
+        aria-label="Menú principal">
+      </nav>
+
+      <div class="sidebar-bottom">
+
+        <div class="mini-tip">
+          <b>Aprender es explorar</b>
+          <span>
+            Observa, experimenta y comprueba
+            tus ideas matemáticas.
+          </span>
+        </div>
+
+        <button
+          type="button"
+          class="nav-item logout"
+          data-action="logout">
+          ↪ Cerrar sesión
+        </button>
+
+      </div>
+
+    </aside>
+
+    <div class="main-area">
+
+      <header class="topbar">
+
+        <button
+          type="button"
+          class="mobile-menu"
+          id="mobileMenu"
+          aria-label="Abrir menú">
+          ☰
+        </button>
+
+        <div class="top-breadcrumb">
+          <span class="live-dot"></span>
+          Espacio de aprendizaje
+          <span class="sep">/</span>
+          <strong id="pageTitle">Inicio</strong>
+        </div>
+
+        <div class="user-widget">
+          <div>
+            <strong id="userName">Usuario</strong>
+            <span id="userRole">Estudiante</span>
+          </div>
+
+          <div id="avatar" class="avatar">U</div>
+        </div>
+
+      </header>
+
+      <main
+        class="main-content"
+        id="page"
+        tabindex="-1">
+      </main>
+
+    </div>
+
+  </div>
+
+  <!-- NOTIFICACIONES -->
+  <div
+    class="toast"
+    id="toast"
+    role="status"
+    aria-live="polite">
+  </div>
+
+</body>
+</html>
